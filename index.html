@@ -63,9 +63,32 @@
 
         /* Custom Scrollbar */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .custom-scroll::-webkit-scrollbar { width: 8px; }
-        .custom-scroll::-webkit-scrollbar-track { background: #1e293b; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        
+        /* Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #6366f1;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 0 2px #1e293b;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #334155;
+            border-radius: 2px;
+        }
     </style>
 </head>
 <body>
@@ -80,7 +103,7 @@
             return (
                 <div className="bg-black/40 border-b border-slate-800 py-1.5 flex justify-center items-center gap-4 text-xs z-40 relative">
                     <span className="text-slate-500 font-medium">More Tools:</span>
-                    <a href="https://www.snapglow.app/index.html" className="text-slate-300 hover:text-white hover:underline transition-colors flex items-center gap-1.5">
+                    <a href="https://snapglow.app" className="text-slate-300 hover:text-white hover:underline transition-colors flex items-center gap-1.5">
                         ✨ SnapGlow
                     </a>
                     <span className="text-slate-700">|</span>
@@ -105,9 +128,14 @@
                 reset: '重置視角',
                 undo: '復原',
                 download: '匯出圖片',
-                upload_title: '參考圖片',
-                upload_desc: '上傳圖片轉像素',
-                quick_size: '快速建立畫布',
+                upload_title: '圖片調整',
+                upload_desc: '上傳圖片來開始',
+                adj_res: '解析度 (大小)',
+                adj_bright: '亮度',
+                adj_contrast: '對比度',
+                adj_sat: '飽和度',
+                adj_hue: '色相',
+                quick_size: '快速畫布',
                 custom_size: '自訂尺寸',
                 create: '建立',
                 width: '寬',
@@ -136,8 +164,13 @@
                 reset: 'Reset View',
                 undo: 'Undo',
                 download: 'Export PNG',
-                upload_title: 'Reference',
-                upload_desc: 'Image to Pixel',
+                upload_title: 'Image Adjust',
+                upload_desc: 'Upload to start',
+                adj_res: 'Resolution',
+                adj_bright: 'Brightness',
+                adj_contrast: 'Contrast',
+                adj_sat: 'Saturation',
+                adj_hue: 'Hue',
                 quick_size: 'Quick Canvas',
                 custom_size: 'Custom Size',
                 create: 'Create',
@@ -160,14 +193,14 @@
         // --- Legal Content ---
         const LEGAL_CONTENT = {
             'zh-TW': {
-                privacy: `<h2>隱私權政策</h2><p>最後更新日期：2026年</p><p>歡迎使用 Pixel Art Studio。我們非常重視您的隱私。</p><h3>1. 資訊收集</h3><p>本網站是一個純前端應用程式。您的所有畫作數據皆儲存於您的瀏覽器本地記憶體中，我們不會將您的畫作上傳至任何伺服器。</p><h3>2. Cookie 使用</h3><p>我們使用 Google AdSense 來顯示廣告，這可能會使用 Cookies 來根據您之前的訪問記錄投放廣告。</p>`,
-                terms: `<h2>服務條款</h2><p>最後更新日期：2026年</p><h3>1. 使用許可</h3><p>您可以免費使用本工具進行個人或商業創作。</p><h3>2. 免責聲明</h3><p>本工具按「原樣」提供，不提供任何形式的保證。開發者不對因使用本工具造成的任何數據丟失負責。</p>`,
-                contact: `<h2>聯絡我們</h2><p>如果您有任何問題、建議或發現 Bug，歡迎透過以下方式聯絡：</p><p>Email: SnapGlowApp@gmail.com</p>`
+                privacy: `<h2>隱私權政策</h2><p>最後更新日期：2026年</p><p>歡迎使用 Pixel Art Studio。我們非常重視您的隱私。</p><h3>1. 資訊收集</h3><p>本網站是一個純前端應用程式。您的所有畫作數據皆儲存於您的瀏覽器本地記憶體中，我們不會將您的畫作上傳至任何伺服器。</p>`,
+                terms: `<h2>服務條款</h2><p>最後更新日期：2026年</p><h3>1. 使用許可</h3><p>您可以免費使用本工具進行個人或商業創作。</p>`,
+                contact: `<h2>聯絡我們</h2><p>Email: SnapGlowApp@gmail.com</p>`
             },
             'en': {
-                privacy: `<h2>Privacy Policy</h2><p>Last updated: 2026</p><p>Welcome to Pixel Art Studio. We value your privacy.</p><h3>1. Information Collection</h3><p>This website is a client-side application. All your data is stored locally in your browser memory. We do not upload your artwork to any servers.</p><h3>2. Cookies</h3><p>We use Google AdSense to serve ads, which may use cookies to serve ads based on your prior visits.</p>`,
-                terms: `<h2>Terms of Service</h2><p>Last updated: 2026</p><h3>1. License</h3><p>You are free to use this tool for personal or commercial projects.</p><h3>2. Disclaimer</h3><p>The tool is provided "as is", without warranty of any kind. The developer is not liable for any data loss.</p>`,
-                contact: `<h2>Contact Us</h2><p>If you have any questions, suggestions or bug reports, please contact us at:</p><p>Email: SnapGlowApp@gmail.com</p>`
+                privacy: `<h2>Privacy Policy</h2><p>Last updated: 2026</p><p>Welcome to Pixel Art Studio. We value your privacy.</p><h3>1. Information Collection</h3><p>This website is a client-side application. All your data is stored locally in your browser memory.</p>`,
+                terms: `<h2>Terms of Service</h2><p>Last updated: 2026</p><h3>1. License</h3><p>You are free to use this tool for personal or commercial projects.</p>`,
+                contact: `<h2>Contact Us</h2><p>Email: SnapGlowApp@gmail.com</p>`
             }
         };
 
@@ -186,7 +219,8 @@
             Mouse: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="7"/><path d="M12 6v4"/></svg>,
             ResetView: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>,
             Coffee: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>,
-            Globe: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            Globe: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>,
+            Trash: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
         };
 
         const rgbToHex = (r, g, b) => "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -257,6 +291,16 @@
             const [customH, setCustomH] = useState(64);
             const [activeModal, setActiveModal] = useState(null);
 
+            // New Image Processing States
+            const [uploadedImage, setUploadedImage] = useState(null); // Stores the source image object
+            const [filters, setFilters] = useState({
+                resolution: 64, // target width
+                contrast: 100,
+                saturation: 100,
+                brightness: 100,
+                hue: 0
+            });
+
             const canvasRef = useRef(null);
             const containerRef = useRef(null);
             const isDrawing = useRef(false);
@@ -265,6 +309,7 @@
 
             const t = (key) => TRANSLATIONS[lang][key] || key;
 
+            // Draw Canvas (Visualization)
             const drawCanvas = useCallback(() => {
                 const canvas = canvasRef.current;
                 if (!canvas) return;
@@ -284,6 +329,53 @@
 
             useEffect(() => { drawCanvas(); }, [drawCanvas]);
 
+            // Apply Filters to Image (The Core Logic)
+            const applyFilters = useCallback((img = uploadedImage, currentFilters = filters) => {
+                if(!img) return;
+
+                // 1. Calculate Target Dimensions
+                const w = currentFilters.resolution;
+                const aspectRatio = img.height / img.width;
+                const h = Math.max(1, Math.round(w * aspectRatio));
+
+                // 2. Create Temp Canvas for Processing
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = w;
+                tempCanvas.height = h;
+                const ctx = tempCanvas.getContext('2d');
+
+                // 3. Apply CSS Filters
+                ctx.filter = `contrast(${currentFilters.contrast}%) saturate(${currentFilters.saturation}%) brightness(${currentFilters.brightness}%) hue-rotate(${currentFilters.hue}deg)`;
+                
+                // 4. Draw Resized Image
+                ctx.drawImage(img, 0, 0, w, h);
+
+                // 5. Extract Pixels
+                const data = ctx.getImageData(0, 0, w, h).data;
+                const newPixels = Array(w * h).fill("");
+                
+                for(let i=0; i<data.length; i+=4) {
+                    if(data[i+3] > 50) { // Alpha threshold
+                        newPixels[i/4] = rgbToHex(data[i], data[i+1], data[i+2]);
+                    }
+                }
+
+                // 6. Update App State
+                setDimensions({width: w, height: h});
+                setPixels(newPixels);
+                // Adjust zoom only if significantly changed to avoid jumpiness
+                // setZoom(Math.max(2, Math.floor(500 / Math.max(w, h))));
+            }, [uploadedImage, filters]);
+
+            // Debounced Filter Application
+            useEffect(() => {
+                const timer = setTimeout(() => {
+                    if(uploadedImage) applyFilters();
+                }, 50); // 50ms debounce
+                return () => clearTimeout(timer);
+            }, [filters, applyFilters, uploadedImage]);
+
+
             const updateRecentColors = (color) => {
                 setRecentColors(prev => {
                     const filtered = prev.filter(c => c !== color);
@@ -298,6 +390,7 @@
                 setHistory([]);
                 setZoom(w > 64 ? 10 : 20);
                 setPanOffset({ x: 0, y: 0 });
+                setUploadedImage(null); // Clear image if manual resize
             };
 
             const saveHistory = () => {
@@ -329,7 +422,9 @@
                     e.preventDefault();
                 } else if (e.button === 0) {
                     isDrawing.current = true;
-                    saveHistory();
+                    saveHistory(); // Save before drawing
+                    // Note: If image is active, drawing will modify the pixels array, 
+                    // but the next filter adjustment will overwrite it. This is expected behavior for "Image Mode".
                     if (tool === 'pencil' || tool === 'fill') updateRecentColors(selectedColor);
                     paint(e);
                 }
@@ -412,7 +507,7 @@
                 setZoom(20);
             };
 
-            // NEW: Modified Image Upload Handler
+            // Initial Image Load
             const handleImageUpload = (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -420,54 +515,25 @@
                 reader.onload = (event) => {
                     const img = new Image();
                     img.onload = () => {
-                        // 1. Calculate safe dimensions (Max 128px for performance)
-                        const MAX_SIZE = 128;
-                        let w = img.width;
-                        let h = img.height;
-                        
-                        // Scale down if too big
-                        if (w > MAX_SIZE || h > MAX_SIZE) {
-                            const ratio = Math.min(MAX_SIZE / w, MAX_SIZE / h);
-                            w = Math.floor(w * ratio);
-                            h = Math.floor(h * ratio);
-                        }
-
-                        // 2. Prepare canvas
-                        const tempCanvas = document.createElement('canvas');
-                        const ctx = tempCanvas.getContext('2d');
-                        tempCanvas.width = w;
-                        tempCanvas.height = h;
-                        
-                        // 3. Draw image resized
-                        ctx.drawImage(img, 0, 0, w, h);
-                        
-                        // 4. Extract pixel data
-                        const data = ctx.getImageData(0, 0, w, h).data;
-                        const newPixels = Array(w * h).fill("");
-                        
-                        for (let i = 0; i < data.length; i+=4) {
-                            // Check alpha to detect transparency
-                            if (data[i+3] > 50) { 
-                                newPixels[i/4] = rgbToHex(data[i], data[i+1], data[i+2]);
-                            }
-                        }
-                        
-                        // 5. Update state
-                        if(confirm(t('confirm_new'))) {
-                            setDimensions({ width: w, height: h });
-                            setPixels(newPixels);
-                            setHistory([]); // Clear history
-                            // Auto zoom to fit
-                            const newZoom = Math.floor(500 / Math.max(w, h));
-                            setZoom(Math.max(2, newZoom));
-                            setPanOffset({ x: 0, y: 0 });
-                        }
+                        // Set uploaded image and default filters
+                        setUploadedImage(img);
+                        setFilters(prev => ({...prev, resolution: Math.min(64, img.width)}));
+                        setHistory([]);
+                        // Initial fit
+                        const newZoom = Math.floor(500 / Math.max(img.width, img.height));
+                        setZoom(Math.max(4, newZoom));
+                        setPanOffset({ x: 0, y: 0 });
                     };
                     img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
                 e.target.value = '';
             };
+
+            const clearImage = () => {
+                setUploadedImage(null);
+                setPixels(Array(dimensions.width * dimensions.height).fill(""));
+            }
 
             const downloadImage = () => {
                 const link = document.createElement('a');
@@ -485,10 +551,8 @@
 
             return (
                 <div className="h-screen flex flex-col overflow-hidden bg-[#0f172a] no-select">
-                    {/* Top Network Nav */}
                     <NetworkNav />
 
-                    {/* Header */}
                     <header className="bg-slate-900 border-b border-slate-800 p-3 flex justify-between items-center z-30 shrink-0 shadow-md">
                         <div className="flex items-center gap-4">
                             <h1 className="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
@@ -516,7 +580,6 @@
                     </header>
 
                     <div className="flex-1 flex overflow-hidden">
-                        {/* LEFT: Tools */}
                         <aside className="w-16 sm:w-20 bg-slate-900 border-r border-slate-800 flex flex-col items-center py-6 gap-6 shrink-0 z-50 shadow-xl">
                             <div className="flex flex-col gap-3 w-full px-3">
                                 <ToolBtn icon={<Icons.Pencil/>} active={tool==='pencil'} onClick={()=>setTool('pencil')} color="blue" tip={t('pencil')} />
@@ -527,116 +590,103 @@
                             <div className="w-full px-4"><div className="h-px bg-slate-800"></div></div>
                             <div className="flex flex-col gap-3 items-center flex-1">
                                 <div className="relative group">
-                                    <input 
-                                        type="color" 
-                                        value={selectedColor} 
-                                        onChange={(e) => {
-                                            setSelectedColor(e.target.value);
-                                            setTool('pencil');
-                                        }}
-                                        className="w-10 h-10 p-0 border-0 rounded-xl overflow-hidden cursor-pointer ring-2 ring-slate-700 group-hover:ring-indigo-500 transition-all shadow-lg"
-                                    />
+                                    <input type="color" value={selectedColor} onChange={(e) => {setSelectedColor(e.target.value); setTool('pencil');}} className="w-10 h-10 p-0 border-0 rounded-xl overflow-hidden cursor-pointer ring-2 ring-slate-700 group-hover:ring-indigo-500 transition-all shadow-lg" />
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     {recentColors.slice(0, 5).map((c, i) => (
-                                        <button 
-                                            key={i} 
-                                            style={{backgroundColor: c}}
-                                            onClick={() => {setSelectedColor(c); setTool('pencil');}}
-                                            className="w-6 h-6 rounded-md border border-slate-600 hover:scale-125 hover:border-white transition-all shadow-sm"
-                                        />
+                                        <button key={i} style={{backgroundColor: c}} onClick={() => {setSelectedColor(c); setTool('pencil');}} className="w-6 h-6 rounded-md border border-slate-600 hover:scale-125 hover:border-white transition-all shadow-sm" />
                                     ))}
                                 </div>
                             </div>
-                            <div className="pb-4">
-                                <BuyMeCoffeeQR t={t} />
-                            </div>
+                            <div className="pb-4"><BuyMeCoffeeQR t={t} /></div>
                         </aside>
 
-                        {/* CENTER: Canvas */}
                         <main className="flex-1 relative overflow-hidden flex flex-col bg-[#0f172a]">
                             <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-slate-800/80 backdrop-blur-md border border-slate-600/50 p-1.5 rounded-full flex gap-3 items-center shadow-2xl z-30 pointer-events-auto">
-                                <button onClick={handleUndo} disabled={history.length===0} className="p-2 hover:bg-white/10 rounded-full text-slate-200 disabled:opacity-30 transition-colors" title={t('undo')}>
-                                    <Icons.Undo />
-                                </button>
+                                <button onClick={handleUndo} disabled={history.length===0} className="p-2 hover:bg-white/10 rounded-full text-slate-200 disabled:opacity-30 transition-colors" title={t('undo')}><Icons.Undo /></button>
                                 <div className="w-px h-5 bg-slate-600"></div>
-                                <button onClick={() => setShowGrid(!showGrid)} className={`p-2 rounded-full transition-colors ${showGrid ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30' : 'text-slate-300 hover:bg-white/10'}`} title={t('grid')}>
-                                    <Icons.Grid />
-                                </button>
+                                <button onClick={() => setShowGrid(!showGrid)} className={`p-2 rounded-full transition-colors ${showGrid ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30' : 'text-slate-300 hover:bg-white/10'}`} title={t('grid')}><Icons.Grid /></button>
                                 <div className="w-px h-5 bg-slate-600"></div>
                                 <div className="flex items-center gap-2 px-2 text-slate-300">
                                     <Icons.ZoomOut />
-                                    <input 
-                                        type="range" 
-                                        min="1" 
-                                        max="80" 
-                                        value={zoom} 
-                                        onChange={(e) => setZoom(Number(e.target.value))}
-                                        className="w-24 h-1 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-indigo-500"
-                                    />
+                                    <input type="range" min="1" max="80" value={zoom} onChange={(e) => setZoom(Number(e.target.value))} className="w-24 h-1 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-indigo-500" />
                                     <Icons.ZoomIn />
                                 </div>
                                 <div className="w-px h-5 bg-slate-600"></div>
-                                <button onClick={resetView} className="p-2 hover:bg-white/10 rounded-full text-slate-200 transition-colors" title={t('reset')}>
-                                    <Icons.ResetView />
-                                </button>
+                                <button onClick={resetView} className="p-2 hover:bg-white/10 rounded-full text-slate-200 transition-colors" title={t('reset')}><Icons.ResetView /></button>
                             </div>
 
-                            <div 
-                                ref={containerRef}
-                                className={`w-full h-full checkerboard flex items-center justify-center overflow-hidden relative cursor-draw`}
-                                onContextMenu={handleContextMenu}
-                                onMouseDown={handleMouseDown}
-                                onMouseMove={handleMouseMove}
-                                onMouseUp={handleMouseUp}
-                                onMouseLeave={handleMouseUp}
-                                onWheel={handleWheel}
-                            >
-                                <div 
-                                    className="relative shadow-2xl bg-white origin-center will-change-transform shrink-0" 
-                                    style={{
-                                        width: dimensions.width * zoom,
-                                        height: dimensions.height * zoom,
-                                        transform: `translate(${panOffset.x}px, ${panOffset.y}px)`, 
-                                        backgroundImage: showGrid ? `
-                                            linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
-                                            linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
-                                        ` : 'none',
-                                        backgroundSize: `${zoom}px ${zoom}px`,
-                                        imageRendering: 'pixelated'
-                                    }}
-                                >
-                                    <canvas 
-                                        ref={canvasRef}
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            imageRendering: 'pixelated',
-                                            display: 'block',
-                                            pointerEvents: 'none'
-                                        }}
-                                    />
+                            <div ref={containerRef} className={`w-full h-full checkerboard flex items-center justify-center overflow-hidden relative cursor-draw`} onContextMenu={handleContextMenu} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp} onWheel={handleWheel}>
+                                <div className="relative shadow-2xl bg-white origin-center will-change-transform shrink-0" style={{ width: dimensions.width * zoom, height: dimensions.height * zoom, transform: `translate(${panOffset.x}px, ${panOffset.y}px)`, backgroundImage: showGrid ? `linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)` : 'none', backgroundSize: `${zoom}px ${zoom}px`, imageRendering: 'pixelated' }}>
+                                    <canvas ref={canvasRef} style={{ width: '100%', height: '100%', imageRendering: 'pixelated', display: 'block', pointerEvents: 'none' }} />
                                 </div>
                             </div>
                         </main>
 
-                        {/* RIGHT: Settings */}
-                        <aside className="w-64 bg-slate-900 border-l border-slate-800 p-6 flex flex-col gap-6 shrink-0 overflow-y-auto z-20 shadow-xl">
+                        <aside className="w-64 bg-slate-900 border-l border-slate-800 p-6 flex flex-col gap-6 shrink-0 overflow-y-auto z-20 shadow-xl custom-scroll">
+                            
+                            {/* --- Image Adjustment Section (Only visible when image is uploaded) --- */}
+                            {uploadedImage && (
+                                <div className="bg-slate-800/80 p-4 rounded-xl border border-indigo-500/50 shadow-lg">
+                                    <div className="flex justify-between items-center mb-3">
+                                        <h3 className="text-xs text-indigo-400 font-bold uppercase tracking-wider">{t('upload_title')}</h3>
+                                        <button onClick={clearImage} className="text-slate-500 hover:text-red-400" title="Clear Image"><Icons.Trash /></button>
+                                    </div>
+                                    
+                                    <div className="space-y-4">
+                                        {/* Resolution */}
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between text-[10px] text-slate-400 font-bold uppercase">
+                                                <span>{t('adj_res')}</span>
+                                                <span className="text-indigo-300">{filters.resolution}px</span>
+                                            </div>
+                                            <input type="range" min="8" max="128" step="1" value={filters.resolution} onChange={(e) => setFilters({...filters, resolution: Number(e.target.value)})} className="w-full" />
+                                        </div>
+
+                                        {/* Brightness */}
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between text-[10px] text-slate-400 font-bold uppercase">
+                                                <span>{t('adj_bright')}</span>
+                                                <span className="text-indigo-300">{filters.brightness}%</span>
+                                            </div>
+                                            <input type="range" min="0" max="200" value={filters.brightness} onChange={(e) => setFilters({...filters, brightness: Number(e.target.value)})} className="w-full" />
+                                        </div>
+
+                                        {/* Contrast */}
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between text-[10px] text-slate-400 font-bold uppercase">
+                                                <span>{t('adj_contrast')}</span>
+                                                <span className="text-indigo-300">{filters.contrast}%</span>
+                                            </div>
+                                            <input type="range" min="0" max="200" value={filters.contrast} onChange={(e) => setFilters({...filters, contrast: Number(e.target.value)})} className="w-full" />
+                                        </div>
+
+                                        {/* Saturation */}
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between text-[10px] text-slate-400 font-bold uppercase">
+                                                <span>{t('adj_sat')}</span>
+                                                <span className="text-indigo-300">{filters.saturation}%</span>
+                                            </div>
+                                            <input type="range" min="0" max="200" value={filters.saturation} onChange={(e) => setFilters({...filters, saturation: Number(e.target.value)})} className="w-full" />
+                                        </div>
+
+                                        {/* Hue */}
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between text-[10px] text-slate-400 font-bold uppercase">
+                                                <span>{t('adj_hue')}</span>
+                                                <span className="text-indigo-300">{filters.hue}°</span>
+                                            </div>
+                                            <input type="range" min="0" max="360" value={filters.hue} onChange={(e) => setFilters({...filters, hue: Number(e.target.value)})} className="w-full" />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             <div>
-                                <h3 className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
-                                    {t('quick_size')}
-                                </h3>
+                                <h3 className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-4 flex items-center gap-2">{t('quick_size')}</h3>
                                 <div className="grid grid-cols-2 gap-2">
                                     {[32, 64, 96, 128].map(s => (
-                                        <button 
-                                            key={s}
-                                            onClick={() => {
-                                                if(confirm(t('confirm_new'))) resizeCanvas(s, s);
-                                            }}
-                                            className="bg-slate-800 hover:bg-slate-700 text-slate-300 py-3 rounded-lg text-xs font-bold font-mono transition-all border border-slate-700 hover:border-indigo-500 hover:text-white"
-                                        >
-                                            {s}x{s}
-                                        </button>
+                                        <button key={s} onClick={() => {if(confirm(t('confirm_new'))) resizeCanvas(s, s);}} className="bg-slate-800 hover:bg-slate-700 text-slate-300 py-3 rounded-lg text-xs font-bold font-mono transition-all border border-slate-700 hover:border-indigo-500 hover:text-white">{s}x{s}</button>
                                     ))}
                                 </div>
                             </div>
@@ -644,97 +694,45 @@
                             <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-800">
                                 <h3 className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-3">{t('custom_size')}</h3>
                                 <div className="flex gap-2 items-center mb-3">
-                                    <input 
-                                        type="number" 
-                                        value={customW}
-                                        onChange={(e) => setCustomW(Math.min(256, Number(e.target.value)))}
-                                        className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-center text-sm focus:border-indigo-500 outline-none text-white font-mono" 
-                                        placeholder={t('width')}
-                                    />
+                                    <input type="number" value={customW} onChange={(e) => setCustomW(Math.min(256, Number(e.target.value)))} className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-center text-sm focus:border-indigo-500 outline-none text-white font-mono" placeholder={t('width')} />
                                     <span className="text-slate-500 font-bold">×</span>
-                                    <input 
-                                        type="number" 
-                                        value={customH}
-                                        onChange={(e) => setCustomH(Math.min(256, Number(e.target.value)))}
-                                        className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-center text-sm focus:border-indigo-500 outline-none text-white font-mono"
-                                        placeholder={t('height')}
-                                    />
+                                    <input type="number" value={customH} onChange={(e) => setCustomH(Math.min(256, Number(e.target.value)))} className="w-full bg-slate-900 border border-slate-600 rounded p-2 text-center text-sm focus:border-indigo-500 outline-none text-white font-mono" placeholder={t('height')} />
                                 </div>
-                                <button 
-                                    onClick={() => {
-                                        if(customW > 0 && customH > 0) {
-                                            if(confirm(t('confirm_new'))) resizeCanvas(customW, customH);
-                                        }
-                                    }}
-                                    className="w-full bg-slate-700 hover:bg-indigo-600 text-white py-2 rounded-lg text-sm font-bold transition-all"
-                                >
-                                    {t('create')}
-                                </button>
+                                <button onClick={() => {if(customW > 0 && customH > 0) {if(confirm(t('confirm_new'))) resizeCanvas(customW, customH);}}} className="w-full bg-slate-700 hover:bg-indigo-600 text-white py-2 rounded-lg text-sm font-bold transition-all">{t('create')}</button>
                             </div>
 
-                             <div>
-                                <h3 className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-3">{t('upload_title')}</h3>
-                                <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-slate-700 border-dashed rounded-xl cursor-pointer hover:bg-slate-800/50 hover:border-indigo-500/50 transition-all group">
-                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                        <div className="text-slate-500 group-hover:text-indigo-400 mb-2"><Icons.Upload /></div>
-                                        <p className="text-xs text-slate-500 group-hover:text-slate-300 font-medium">{t('upload_desc')}</p>
-                                    </div>
-                                    <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
-                                </label>
-                            </div>
+                             {!uploadedImage && (
+                                 <div>
+                                    <h3 className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-3">{t('upload_title')}</h3>
+                                    <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-slate-700 border-dashed rounded-xl cursor-pointer hover:bg-slate-800/50 hover:border-indigo-500/50 transition-all group">
+                                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                            <div className="text-slate-500 group-hover:text-indigo-400 mb-2"><Icons.Upload /></div>
+                                            <p className="text-xs text-slate-500 group-hover:text-slate-300 font-medium">{t('upload_desc')}</p>
+                                        </div>
+                                        <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
+                                    </label>
+                                </div>
+                             )}
 
                             <div className="mt-auto flex flex-col gap-4">
-                                <div className="border-t border-slate-800 pt-4">
-                                    <BuyMeCoffeeBanner t={t} />
-                                </div>
-                                
+                                <div className="border-t border-slate-800 pt-4"><BuyMeCoffeeBanner t={t} /></div>
                                 <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-[10px] text-slate-500 pt-2 pb-2">
-                                    <button onClick={() => setActiveModal('privacy')} className="hover:text-slate-300 transition-colors hover:underline">
-                                        {t('footer_privacy')}
-                                    </button>
-                                    <button onClick={() => setActiveModal('terms')} className="hover:text-slate-300 transition-colors hover:underline">
-                                        {t('footer_terms')}
-                                    </button>
-                                    <button onClick={() => setActiveModal('contact')} className="hover:text-slate-300 transition-colors hover:underline">
-                                        {t('footer_contact')}
-                                    </button>
+                                    <button onClick={() => setActiveModal('privacy')} className="hover:text-slate-300 transition-colors hover:underline">{t('footer_privacy')}</button>
+                                    <button onClick={() => setActiveModal('terms')} className="hover:text-slate-300 transition-colors hover:underline">{t('footer_terms')}</button>
+                                    <button onClick={() => setActiveModal('contact')} className="hover:text-slate-300 transition-colors hover:underline">{t('footer_contact')}</button>
                                 </div>
                             </div>
                         </aside>
                     </div>
-
-                    <Modal 
-                        isOpen={!!activeModal} 
-                        onClose={() => setActiveModal(null)} 
-                        content={activeModal ? LEGAL_CONTENT[lang][activeModal] : ''}
-                    />
+                    <Modal isOpen={!!activeModal} onClose={() => setActiveModal(null)} content={activeModal ? LEGAL_CONTENT[lang][activeModal] : ''} />
                 </div>
             );
         }
 
         function ToolBtn({ icon, active, onClick, color, tip }) {
-            const colors = {
-                blue: 'hover:bg-blue-500/20 hover:text-blue-400',
-                red: 'hover:bg-red-500/20 hover:text-red-400',
-                green: 'hover:bg-emerald-500/20 hover:text-emerald-400',
-                yellow: 'hover:bg-amber-500/20 hover:text-amber-400',
-            };
-            const activeColors = {
-                blue: 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 ring-1 ring-blue-400',
-                red: 'bg-red-600 text-white shadow-lg shadow-red-500/30 ring-1 ring-red-400',
-                green: 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-1 ring-emerald-400',
-                yellow: 'bg-amber-600 text-white shadow-lg shadow-amber-500/30 ring-1 ring-amber-400',
-            };
-
-            return (
-                <button 
-                    onClick={onClick}
-                    title={tip}
-                    className={`w-full aspect-square rounded-xl flex items-center justify-center transition-all duration-200 ${active ? `${activeColors[color]} scale-105` : `text-slate-400 ${colors[color]} bg-slate-800/50`}`}
-                >
-                    {icon}
-                </button>
-            )
+            const colors = { blue: 'hover:bg-blue-500/20 hover:text-blue-400', red: 'hover:bg-red-500/20 hover:text-red-400', green: 'hover:bg-emerald-500/20 hover:text-emerald-400', yellow: 'hover:bg-amber-500/20 hover:text-amber-400' };
+            const activeColors = { blue: 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 ring-1 ring-blue-400', red: 'bg-red-600 text-white shadow-lg shadow-red-500/30 ring-1 ring-red-400', green: 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-1 ring-emerald-400', yellow: 'bg-amber-600 text-white shadow-lg shadow-amber-500/30 ring-1 ring-amber-400' };
+            return ( <button onClick={onClick} title={tip} className={`w-full aspect-square rounded-xl flex items-center justify-center transition-all duration-200 ${active ? `${activeColors[color]} scale-105` : `text-slate-400 ${colors[color]} bg-slate-800/50`}`}>{icon}</button> )
         }
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -742,4 +740,3 @@
     </script>
 </body>
 </html>
-
