@@ -6,7 +6,7 @@
     <title>Pixel Art Studio | Global Edition</title>
     <meta name="description" content="Free online Pixel Art maker for Minecraft and retro game assets.">
 
-    <!-- 1. Google Analytics (建議換成新的 ID 以區分流量，目前預設為您的 SnapGlow ID) -->
+    <!-- 1. Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-04KW4917B3"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -15,7 +15,7 @@
       gtag('config', 'G-ZFC0SL7NFQ');
     </script>
 
-    <!-- 2. Google AdSense (您的驗證代碼) -->
+    <!-- 2. Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2859402783329016"
      crossorigin="anonymous"></script>
     
@@ -75,16 +75,16 @@
     <script type="text/babel">
         const { useState, useEffect, useRef, useCallback } = React;
 
-        // --- Network Nav Component (互連連結) ---
+        // --- Network Nav Component ---
         function NetworkNav() {
             return (
                 <div className="bg-black/40 border-b border-slate-800 py-1.5 flex justify-center items-center gap-4 text-xs z-40 relative">
                     <span className="text-slate-500 font-medium">More Tools:</span>
-                    <a href="https://www.snapglow.app/index.html" className="text-slate-300 hover:text-white hover:underline transition-colors flex items-center gap-1.5">
+                    <a href="https://snapglow.app" className="text-slate-300 hover:text-white hover:underline transition-colors flex items-center gap-1.5">
                         ✨ SnapGlow
                     </a>
                     <span className="text-slate-700">|</span>
-                    <a href="https://pixel.snapglow.app" className="text-indigo-400 font-bold hover:text-indigo-300 transition-colors flex items-center gap-1.5 pointer-events-none">
+                    <a href="#" className="text-indigo-400 font-bold hover:text-indigo-300 transition-colors flex items-center gap-1.5 pointer-events-none">
                         🎨 PixelRetro
                     </a>
                 </div>
@@ -412,6 +412,7 @@
                 setZoom(20);
             };
 
+            // NEW: Modified Image Upload Handler
             const handleImageUpload = (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -419,18 +420,48 @@
                 reader.onload = (event) => {
                     const img = new Image();
                     img.onload = () => {
+                        // 1. Calculate safe dimensions (Max 128px for performance)
+                        const MAX_SIZE = 128;
+                        let w = img.width;
+                        let h = img.height;
+                        
+                        // Scale down if too big
+                        if (w > MAX_SIZE || h > MAX_SIZE) {
+                            const ratio = Math.min(MAX_SIZE / w, MAX_SIZE / h);
+                            w = Math.floor(w * ratio);
+                            h = Math.floor(h * ratio);
+                        }
+
+                        // 2. Prepare canvas
                         const tempCanvas = document.createElement('canvas');
                         const ctx = tempCanvas.getContext('2d');
-                        tempCanvas.width = dimensions.width;
-                        tempCanvas.height = dimensions.height;
-                        ctx.drawImage(img, 0, 0, dimensions.width, dimensions.height);
-                        const data = ctx.getImageData(0, 0, dimensions.width, dimensions.height).data;
-                        const newPixels = Array(dimensions.width * dimensions.height).fill("");
+                        tempCanvas.width = w;
+                        tempCanvas.height = h;
+                        
+                        // 3. Draw image resized
+                        ctx.drawImage(img, 0, 0, w, h);
+                        
+                        // 4. Extract pixel data
+                        const data = ctx.getImageData(0, 0, w, h).data;
+                        const newPixels = Array(w * h).fill("");
+                        
                         for (let i = 0; i < data.length; i+=4) {
-                            if (data[i+3] > 100) newPixels[i/4] = rgbToHex(data[i], data[i+1], data[i+2]);
+                            // Check alpha to detect transparency
+                            if (data[i+3] > 50) { 
+                                newPixels[i/4] = rgbToHex(data[i], data[i+1], data[i+2]);
+                            }
                         }
-                        saveHistory();
-                        setPixels(newPixels);
+                        
+                        // 5. Update state
+                        if(confirm(t('confirm_new'))) {
+                            setDimensions({ width: w, height: h });
+                            setPixels(newPixels);
+                            setHistory([]); // Clear history
+                            // Auto zoom to fit
+                            const newZoom = Math.floor(500 / Math.max(w, h));
+                            setZoom(Math.max(2, newZoom));
+                            setPanOffset({ x: 0, y: 0 });
+                        }
                     };
                     img.src = event.target.result;
                 };
@@ -711,4 +742,3 @@
     </script>
 </body>
 </html>
-
